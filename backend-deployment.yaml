@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ignition-be-deployment
+  labels:
+    app: ignition
+    type: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ignition
+  template:
+    metadata:
+      labels:
+        app: ignition
+        type: be
+    spec:
+      imagePullSecrets:
+      - name: aws-regcred
+      containers:
+      - name: ignition
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-backend:latest
+        envFrom:
+          - secretRef:
+              name: public-demo-backend # Kubernetes secret name
+        command: ["/bin/sh"]
+        args: ["-c","app-entrypoint-shim.sh -m 8192 -n backend"]
+        ports:
+        - name: http
+          containerPort: 8088
+        - name: https
+          containerPort: 8043
+        - name: gan
+          containerPort: 8060
