@@ -21,4 +21,4 @@ spec:
         image: twingate/connector:latest
         envFrom:
           - secretRef:
-              name: public-demo-twingate # Kubernetes secret name
+              name: doppler-token-secret-tg # Kubernetes secret name

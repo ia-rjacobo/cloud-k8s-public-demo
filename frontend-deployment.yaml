@@ -23,7 +23,7 @@ spec:
         image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-frontend:latest
         envFrom:
           - secretRef:
-              name: public-demo-frontend # Kubernetes secret name
+              name: doppler-token-secret-fe # Kubernetes secret name
         command: ["/bin/sh"]
         args: ["-c","app-entrypoint-shim.sh -m 8192 -n frontend-b-$(shuf -i 10000-99999 -n 1)"]
         ports:
