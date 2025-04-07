@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: twingate-deployment
+  labels:
+    app: twingate
+    type: proxy
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: twingate
+  template:
+    metadata:
+      labels:
+        app: twingate
+        type: proxy
+    spec:
+      containers:
+      - name: twingate01
+        image: twingate/connector:latest
+        envFrom:
+          - secretRef:
+              name: public-demo-twingate # Kubernetes secret name
