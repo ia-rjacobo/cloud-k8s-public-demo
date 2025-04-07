@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ignition-fe-deployment
+  labels:
+    app: ignition
+    type: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ignition
+  template:
+    metadata:
+      labels:
+        app: ignition
+        type: fe
+    spec:
+      imagePullSecrets:
+      - name: aws-regcred
+      containers:
+      - name: ignition
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-frontend:latest
+        envFrom:
+          - secretRef:
+              name: public-demo-frontend # Kubernetes secret name
+        command: ["/bin/sh"]
+        args: ["-c","app-entrypoint-shim.sh -m 8192 -n frontend-b-$(shuf -i 10000-99999 -n 1)"]
+        ports:
+        - name: http
+          containerPort: 8088
+        - name: https
+          containerPort: 8043
+        - name: gan
+          containerPort: 8060
