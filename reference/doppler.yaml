@@ -1,0 +1,54 @@
+apiVersion: secrets.doppler.com/v1alpha1
+kind: DopplerSecret
+metadata:
+  name: doppler-token-secret-fe
+  namespace: doppler-operator-system
+spec:
+  tokenSecret:
+    name: doppler-token-secret-fe
+    namespace: doppler-operator-system
+  project: public-demo-frontend
+  config: dev
+  resyncSeconds: 120
+  managedSecret:
+    name: doppler-token-secret-fe
+    namespace: default
+    type: Opaque
+
+---
+
+apiVersion: secrets.doppler.com/v1alpha1
+kind: DopplerSecret
+metadata:
+  name: doppler-token-secret-be
+  namespace: doppler-operator-system
+spec:
+  tokenSecret:
+    name: doppler-token-secret-be
+    namespace: doppler-operator-system
+  project: public-demo-backend
+  config: dev
+  resyncSeconds: 120
+  managedSecret:
+    name: doppler-token-secret-be
+    namespace: default
+    type: Opaque
+
+---
+
+apiVersion: secrets.doppler.com/v1alpha1
+kind: DopplerSecret
+metadata:
+  name: doppler-token-secret-tg
+  namespace: doppler-operator-system
+spec:
+  tokenSecret:
+    name: doppler-token-secret-tg
+    namespace: doppler-operator-system
+  project: public-demo-twingate
+  config: dev
+  resyncSeconds: 120
+  managedSecret:
+    name: doppler-token-secret-tg
+    namespace: default
+    type: Opaque
