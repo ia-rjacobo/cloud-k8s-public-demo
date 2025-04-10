@@ -20,7 +20,7 @@ spec:
       - name: aws-regcred
       containers:
       - name: ignition
-        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-backend:latest
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-backend:1.4.1
         envFrom:
           - secretRef:
               name: doppler-token-secret-be # Kubernetes secret name
@@ -58,7 +58,7 @@ spec:
       - name: aws-regcred
       containers:
       - name: ignition
-        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-frontend:latest
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-frontend:1.4.1
         envFrom:
           - secretRef:
               name: doppler-token-secret-fe # Kubernetes secret name
