@@ -44,7 +44,7 @@ metadata:
     app: ignition
     type: fe
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: ignition
