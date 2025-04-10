@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ignition-be-deployment
+  labels:
+    app: ignition
+    type: be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ignition
+  template:
+    metadata:
+      labels:
+        app: ignition
+        type: be
+    spec:
+      imagePullSecrets:
+      - name: aws-regcred
+      containers:
+      - name: ignition
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-backend:latest
+        envFrom:
+          - secretRef:
+              name: doppler-token-secret-be # Kubernetes secret name
+        command: ["/bin/sh"]
+        args: ["-c","app-entrypoint-shim.sh -m 8192 -n backend"]
+        ports:
+        - name: http
+          containerPort: 8088
+        - name: https
+          containerPort: 8043
+        - name: gan
+          containerPort: 8060
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ignition-fe-deployment
+  labels:
+    app: ignition
+    type: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ignition
+  template:
+    metadata:
+      labels:
+        app: ignition
+        type: fe
+    spec:
+      imagePullSecrets:
+      - name: aws-regcred
+      containers:
+      - name: ignition
+        image: 590183919098.dkr.ecr.us-west-2.amazonaws.com/publicdemo-frontend:latest
+        envFrom:
+          - secretRef:
+              name: doppler-token-secret-fe # Kubernetes secret name
+        command: ["/bin/sh"]
+        args: ["-c","app-entrypoint-shim.sh -m 8192 -n frontend-b-$(shuf -i 10000-99999 -n 1)"]
+        ports:
+        - name: http
+          containerPort: 8088
+        - name: https
+          containerPort: 8043
+        - name: gan
+          containerPort: 8060
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ignition-be-service
+spec:
+  selector:
+
+    app: ignition
+    type: be
+  type: LoadBalancer
+  ports:
+    - name: 8088-tcp
+      protocol: TCP
+      port: 8088
+      targetPort: 8088
+    - name: 8043-tcp
+      protocol: TCP
+      port: 8043
+      targetPort: 8043
+    - name: 8060-tcp
+      protocol: TCP
+      port: 8060
+      targetPort: 8060
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: ignition-fe-service
+spec:
+  selector:
+    app: ignition
+    type: fe
+  type: LoadBalancer
+  ports:
+    - name: 8088-tcp
+      protocol: TCP
+      port: 1080
+      targetPort: 8088
