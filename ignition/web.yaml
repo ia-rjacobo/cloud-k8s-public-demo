@@ -28,12 +28,11 @@ spec:
         ports:
         - name: 80-tcp
           containerPort: 80
-      nodeSelector:
-          name: b-server01  # This must match the label on the node
         volumeMounts:
           - mountPath: "/usr/share/nginx/html"
             name: nginx-pv-volume
-        
+        nodeSelector:
+          name: b-server01  # This must match the label on the node
 
 ---
 
