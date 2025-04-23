@@ -32,7 +32,7 @@ spec:
           - mountPath: "/usr/share/nginx/html"
             name: nginx-pv-volume
         nodeSelector:
-          name: b-server01  # This must match the label on the node
+          name: b-server01
 
 ---
 
