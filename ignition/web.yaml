@@ -39,7 +39,7 @@ spec:
     type: fe
   type: LoadBalancer
   ports:
-    - name: 9443-80-tcp
+    - name: 9999-80-tcp
       protocol: TCP
-      port: 9443
+      port: 9999
       targetPort: 80
