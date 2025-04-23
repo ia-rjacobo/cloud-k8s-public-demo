@@ -30,6 +30,7 @@ spec:
           containerPort: 80
         volumeMounts:
           - mountPath: "/usr/share/nginx/html"
+            name: nginx-pv-volume
         
 
 ---
@@ -62,7 +63,7 @@ spec:
   capacity:
     storage: 1Gi
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   hostPath:
     path: "/root/html"
 
@@ -75,7 +76,7 @@ metadata:
 spec:
   storageClassName: manual
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
       storage: 1Gi
