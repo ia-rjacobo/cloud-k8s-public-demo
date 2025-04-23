@@ -16,8 +16,6 @@ spec:
         app: web
         type: fe
     spec:
-      imagePullSecrets:
-      - name: aws-regcred
       containers:
       - name: web
         image: httpd
