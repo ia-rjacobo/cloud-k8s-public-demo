@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  labels:
+    app: web
+    type: fe
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+        type: fe
+    spec:
+      imagePullSecrets:
+      - name: aws-regcred
+      containers:
+      - name: web
+        image: httpd
+        #command: ["/bin/sh"]
+        #args: ["-c","app-entrypoint-shim.sh -m 8192 -n frontend-b-$(shuf -i 10000-99999 -n 1)"]
+        ports:
+        - name: 80-tcp
+          containerPort: 80
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+    type: fe
+  type: LoadBalancer
+  ports:
+    - name: 9443-80-tcp
+      protocol: TCP
+      port: 9443
+      targetPort: 80
