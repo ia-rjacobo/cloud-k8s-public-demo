@@ -39,5 +39,5 @@ spec:
   ports:
     - name: 9999-80-tcp
       protocol: TCP
-      port: 9999
+      port: 9443
       targetPort: 80
