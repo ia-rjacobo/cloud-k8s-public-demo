@@ -1,0 +1,25 @@
+apiVersion: v1
+data:
+  accounts.ignition: login
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
+  namespace: argocd
+  
+---
+
+apiVersion: v1
+data:
+  policy.csv: |
+    p, role:readonly-user, applications, get, default/ignition, allow
+    g, ignition, role:readonly-user
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-rbac-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-rbac-cm
+  namespace: argocd
