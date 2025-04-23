@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-deployment
+  labels:
+    app: web
+    type: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+        type: fe
+    spec:
+      volumes:
+        - name: nginx-pv-volume
+          persistentVolumeClaim:
+            claimName: nginx-pv-claim
+      containers:
+      - name: web
+        image: nginx
+        #command: ["/bin/sh"]
+        #args: ["-c","app-entrypoint-shim.sh -m 8192 -n frontend-b-$(shuf -i 10000-99999 -n 1)"]
+        ports:
+        - name: 80-tcp
+          containerPort: 80
+      nodeSelector:
+          name: b-server01  # This must match the label on the node
+        volumeMounts:
+          - mountPath: "/usr/share/nginx/html"
+            name: nginx-pv-volume
+        
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web
+    type: fe
+  type: LoadBalancer
+  ports:
+    - name: 9999-80-tcp
+      protocol: TCP
+      port: 9999
+      targetPort: 80
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nginx-pv-volume
+  labels:
+    type: local
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/root/html"
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nginx-pv-claim
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
