@@ -43,7 +43,6 @@ resource "aws_rds_cluster" "aurorards" {
   engine_version         = "5.7.mysql_aurora.2.12.0"
   database_name          = "DB"
   master_username        = "${var.db_username}"
-  master_password        = "${var.db_password}"
   vpc_security_group_ids = [aws_security_group.allow_aurora.id]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted      = false
