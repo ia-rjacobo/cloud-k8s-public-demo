@@ -8,9 +8,11 @@ terraform {
 }
 
 
-# Configure the AWS Provider
-provider "aws" {
-  shared_config_files      = ["/Users/USERNAME_HERE/.aws/config"]
-  shared_credentials_files = ["/Users/USERNAME_HERE/.aws/credentials"]
-  profile                  = "default"
+terraform {
+  backend "s3" {
+    bucket         = "tf-bucket-029356ec7e69"
+    key            = "env/prod/terraform.tfstate"
+    region         = "us-west-2"
+    use_lockfile   = true  # Enables S3-managed locking
+  }
 }
