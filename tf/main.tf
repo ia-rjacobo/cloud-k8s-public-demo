@@ -38,18 +38,6 @@ resource "aws_iam_instance_profile" "iam_ssm_profile" {
 }
 
 
-
-
-######################################
-## Create Random string(s)
-######################################
-resource "random_string" "random" {
-  length           = 12
-  special          = true
-  override_special = "-"
-}
-
-
 ######################################
 ## Create Instance(s) SG
 ######################################

@@ -17,7 +17,3 @@ output "instance_sg_group" {
 output "vpc" {
   value = aws_vpc.vpc.id
 }
-
-output "random_string" {
-  value = random_string.random.id
-}
