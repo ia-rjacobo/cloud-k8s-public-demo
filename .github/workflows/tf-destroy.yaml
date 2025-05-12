@@ -43,6 +43,6 @@ jobs:
     #  run: cd tf && terraform plan destroy -input=false
 
       # On push to "destroy", destroy the Terraform infrastructure
-    - name: Terraform Apply
+    - name: Terraform Destroy
       if: github.ref == 'refs/heads/destroy' && github.event_name == 'push'
       run: cd tf && terraform destroy -auto-approve -input=false
