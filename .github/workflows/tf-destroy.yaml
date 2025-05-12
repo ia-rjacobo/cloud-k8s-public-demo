@@ -1,0 +1,48 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "destroy" ]
+  pull_request:
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+    - name: Configure aws credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: arn:aws:iam::590183919098:role/ia-tf-permission-role
+        aws-region: us-west-2
+
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.11.4
+            
+    - name: Terraform Init
+      run: cd tf && terraform init
+
+    #- name: Terraform Format
+    #  run: cd tf && terraform fmt -check
+
+    - name: Terraform Plan
+      run: cd tf && terraform plan destroy -input=false
+
+      # On push to "destroy", destroy the Terraform infrastructure
+    - name: Terraform Apply
+      if: github.ref == 'refs/heads/destroy' && github.event_name == 'push'
+      run: cd tf && terraform destroy -auto-approve -input=false
