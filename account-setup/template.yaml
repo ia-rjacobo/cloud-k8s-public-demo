@@ -14,8 +14,8 @@ Resources:
             Federated: "arn:aws:iam::590183919098:oidc-provider/token.actions.githubusercontent.com"
           Action: sts:AssumeRoleWithWebIdentity
           Condition:
-            StringEquals:
-              token.actions.githubusercontent.com:sub: 'repo: ia-rjacobo/cloud-k8s-public-demo:ref:refs/heads/main'
+            StringLike:
+              token.actions.githubusercontent.com:sub: "repo:ia-rjacobo/cloud-k8s-public-demo:ref:refs/heads/main"
               token.actions.githubusercontent.com:aud: sts.amazonaws.com
       Policies:
         - PolicyName: ia-tf-oidc
