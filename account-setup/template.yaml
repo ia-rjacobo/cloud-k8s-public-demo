@@ -1,4 +1,3 @@
-
 Resources:
 # Roles
       Version: '2012-10-17'
@@ -11,7 +10,6 @@ Resources:
           StringEquals:
             token.actions.githubusercontent.com:sub: 'repo: <aws-samples/EXAMPLEREPO>:ref:refs/heads/<ExampleBranch>'
             token.actions.githubusercontent.com:aud: sts.amazonaws.com
-
 
   tfPermissionsIamRole:
     Type: AWS::IAM::Role
@@ -31,7 +29,7 @@ Resources:
             Action:
               - sts:AssumeRole
       Policies:
-        - PolicyName: AWSCloudFormationStackSetAdministrationRole01
+        - PolicyName: ia-tf-oidc
           PolicyDocument:
             Version: '2012-10-17'
             Statement:
