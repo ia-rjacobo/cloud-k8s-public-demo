@@ -2,8 +2,9 @@
 # Create Database
 ######################################
 resource "random_password" "master_password" {
-  length  = 16
-  special = true
+  length           = 16
+  special          = true
+  override_special = "_%@"
 }
 resource "aws_secretsmanager_secret" "db_password" {
   name = "my_db_password"
