@@ -22,7 +22,7 @@ jobs:
     - name: Configure aws credentials
       uses: aws-actions/configure-aws-credentials@v3
       with:
-        role-to-assume: ${{ secrets.IA_TF_ROLE_ARN }}
+        role-to-assume: arn:aws:iam::590183919098:role/ia-tf-permission-role
         aws-region: us-west-2
 
     - name: Checkout
