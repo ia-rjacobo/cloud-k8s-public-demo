@@ -32,7 +32,9 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.11.4
-
+    - name: Change Directory
+      run: cd tf
+      
     - name: Terraform Init
       run: terraform init
 
