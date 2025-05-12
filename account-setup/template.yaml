@@ -1,16 +1,7 @@
+AWSTemplateFormatVersion: 2010-09-09
+    
 Resources:
 # Roles
-      Version: '2012-10-17'
-      Statement:
-      - Effect: Allow
-        Principal:
-          Federated: "<arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com>"
-        Action: sts:AssumeRoleWithWebIdentity
-        Condition:
-          StringEquals:
-            token.actions.githubusercontent.com:sub: 'repo: <aws-samples/EXAMPLEREPO>:ref:refs/heads/<ExampleBranch>'
-            token.actions.githubusercontent.com:aud: sts.amazonaws.com
-
   tfPermissionsIamRole:
     Type: AWS::IAM::Role
     Properties:
