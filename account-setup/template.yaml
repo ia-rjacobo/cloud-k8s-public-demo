@@ -90,3 +90,6 @@ Outputs:
   BucketName:
     Description: S3 Bucket Name
     Value: !Sub ${AWS::StackName}-bucket-${AWS::AccountId}
+  RoleName:
+    Description: Permission Role Name
+    Value: !GetAtt tfPermissionsIamRole.Arn
