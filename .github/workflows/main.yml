@@ -20,7 +20,7 @@ jobs:
 
     steps:
     - name: Configure aws credentials
-      uses: aws-actions/configure-aws-credentials@v2
+      uses: aws-actions/configure-aws-credentials@v3
       with:
         role-to-assume: ${{ secrets.IA_TF_ROLE_ARN }}
         aws-region: us-west-2
