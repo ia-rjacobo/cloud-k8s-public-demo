@@ -1,0 +1,92 @@
+
+Resources:
+# Roles
+      Version: '2012-10-17'
+      Statement:
+      - Effect: Allow
+        Principal:
+          Federated: "<arn:aws:iam::111122223333:oidc-provider/token.actions.githubusercontent.com>"
+        Action: sts:AssumeRoleWithWebIdentity
+        Condition:
+          StringEquals:
+            token.actions.githubusercontent.com:sub: 'repo: <aws-samples/EXAMPLEREPO>:ref:refs/heads/<ExampleBranch>'
+            token.actions.githubusercontent.com:aud: sts.amazonaws.com
+
+
+  tfPermissionsIamRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: Ia-tf-PermissionsIamRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
+        - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForCloudFormation
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - cloudformation.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: AWSCloudFormationStackSetAdministrationRole01
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+            - Effect: Allow
+              Principal:
+                Federated: "arn:aws:iam::590183919098:oidc-provider/token.actions.githubusercontent.com"
+              Action: sts:AssumeRoleWithWebIdentity
+              Condition:
+                StringEquals:
+                  token.actions.githubusercontent.com:sub: 'repo: ia-rjacobo/cloud-k8s-public-demo:ref:refs/heads/main'
+                  token.actions.githubusercontent.com:aud: sts.amazonaws.com
+        - PolicyName: ia-tf-permissions
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "ec2:*"
+                  - "secretsmanager:*"
+                  - "route53:*"
+                  - "rds:*"
+                  - "iam:*"
+                Resource: "*"
+# S3 Bucket
+  Bucket: #S3 Bucket used for TF State
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub ${AWS::StackName}-tf-state-bucket-${AWS::AccountId}
+      BucketEncryption:
+        ServerSideEncryptionConfiguration:
+          - ServerSideEncryptionByDefault:
+              SSEAlgorithm: aws:kms
+              KMSMasterKeyID: alias/aws/s3
+      PublicAccessBlockConfiguration:
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+  BucketBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref Bucket
+      PolicyDocument:
+        Id: RequireEncryptionInTransit
+        Version: '2012-10-17'
+        Statement:
+          - Principal: '*'
+            Action: '*'
+            Effect: Deny
+            Resource:
+              - !GetAtt Bucket.Arn
+              - !Sub ${Bucket.Arn}/*
+            Condition:
+              Bool:
+                aws:SecureTransport: 'false'
+Outputs:
+
+  BucketName:
+    Description: S3 Bucket Name
+    Value: !Sub ${AWS::StackName}-bucket-${AWS::AccountId}
