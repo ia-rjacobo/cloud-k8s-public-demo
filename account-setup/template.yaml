@@ -6,19 +6,6 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName: Ia-tf-PermissionsIamRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
-        - arn:aws:iam::aws:policy/AWSCloudFormationFullAccess
-        - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRoleForCloudFormation
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - cloudformation.amazonaws.com
-            Action:
-              - sts:AssumeRole
       Policies:
         - PolicyName: ia-tf-oidc
           PolicyDocument:
