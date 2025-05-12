@@ -1,0 +1,4 @@
+#!/bin/bash
+sudo apt update && sudo apt install wget vim curl mysql-client -y
+snap install aws-cli --classic
+snap install powershell --classic
