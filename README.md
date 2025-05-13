@@ -2,8 +2,6 @@
 K8S manifests for Ignition Public Demo
 
 ## Configure Account
-* Setup CF Role
-* Deploy CF One Time
 * Setup OIDC
 * Create ROLE (EC2, RDS, Route53, S3, CertificateManager, IAM, SecretsManager access)
 
