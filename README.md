@@ -13,8 +13,8 @@ K8S manifests for Ignition Public Demo
 ## Deploy
 
 ## One Time Setup on Server01
-* Copy to server01 and run (reference/server-install.sh)
+* Copy to server01 and run (https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/resources/server-install.sh)
 
 ## Login to ArgoCD
-* Setup Repository: https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/resources/argo-repository.png
-* Setup Ignition repo: https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/resources/argo-ignition-configuration.png
+* Setup Repository: https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/resfrence/argo-repository.png
+* Setup Ignition repo: https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/reference/argo-ignition-configuration.png
