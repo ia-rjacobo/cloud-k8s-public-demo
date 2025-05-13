@@ -1,18 +1,11 @@
 ######################################
 # Create Database
 ######################################
-resource "random_password" "master_password" {
-  length           = 16
-  special          = true
-  override_special = "_%@"
+data "aws_secretsmanager_secret_version" "my_secret" {
+  secret_id = "arn:aws:secretsmanager:us-west-2:590183919098:secret:public-demo-frontend-ekMPCY"  # Replace with your secret ARN
+  version_stage = "AWSCURRENT" # Or specify a specific version_id
 }
-resource "aws_secretsmanager_secret" "db_password" {
-  name = "my_db_password"
-}
-resource "aws_secretsmanager_secret_version" "db_password_version" {
-  secret_id          = aws_secretsmanager_secret.db_password.id
-  secret_string      = random_password.master_password.result
-}
+
 
 
 resource "aws_security_group" "allow_aurora" {
@@ -55,8 +48,8 @@ resource "aws_rds_cluster" "aurorards" {
   engine                 = "aurora-mysql"
   engine_version         = "5.7.mysql_aurora.2.12.0"
   database_name          = "DB"
-  master_username        = "${var.db_username}"
-  master_password        = aws_secretsmanager_secret_version.db_password_version.secret_string
+  master_username        = data.aws_secretsmanager_secret_version.my_secret.json["DB_USER"] # Access the secret value
+  master_password        = data.aws_secretsmanager_secret_version.my_secret.json["DB_PASSWORD"] # Access the secret value
   vpc_security_group_ids = [aws_security_group.allow_aurora.id]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted      = false
