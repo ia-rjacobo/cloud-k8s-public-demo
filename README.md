@@ -8,6 +8,7 @@ K8S manifests for Ignition Public Demo
 * Create ROLE (EC2, RDS, Route53, S3, CertificateManager, IAM, SecretsManager access)
 
 ## Setup Github Actions
+* add secrets to repo as needed
 * https://github.com/ia-rjacobo/cloud-k8s-public-demo/blob/main/.github/workflows/tf-apply.yml
 
 ## Deploy
