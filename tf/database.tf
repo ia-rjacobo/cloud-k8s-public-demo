@@ -48,8 +48,8 @@ resource "aws_rds_cluster" "aurorards" {
   engine                 = "aurora-mysql"
   engine_version         = "5.7.mysql_aurora.2.12.0"
   database_name          = "DB"
-  master_username        = data.aws_secretsmanager_secret_version.my_secret.json["DB_USER"] # Access the secret value
-  master_password        = data.aws_secretsmanager_secret_version.my_secret.json["DB_PASSWORD"] # Access the secret value
+  master_username        = jsondecode(data.aws_secretsmanager_secret_version.my_secret.secret_string)["DB_USER"]
+  master_password        = jsondecode(data.aws_secretsmanager_secret_version.my_secret.secret_string)["DB_PASSWORD"]
   vpc_security_group_ids = [aws_security_group.allow_aurora.id]
   db_subnet_group_name   = aws_db_subnet_group.db_subnet_group.name
   storage_encrypted      = false
