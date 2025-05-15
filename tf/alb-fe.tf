@@ -36,7 +36,7 @@ resource "aws_lb_listener" "albfe_listener" {
         }
 
         stickiness {
-          enabled  = true
+          enabled  = false
           duration = 86400 #43200 is 12 hours
         }
       }
