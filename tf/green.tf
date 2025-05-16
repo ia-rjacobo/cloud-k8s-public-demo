@@ -177,6 +177,7 @@ resource "aws_lb_target_group" "green" { // Target Group Green
  port     = 1080
  protocol = "HTTP"
  vpc_id   = aws_vpc.vpc.id
+ load_balancing_algorithm_type = "round_robin"
  stickiness {
    enabled = true
    type    = "lb_cookie"
