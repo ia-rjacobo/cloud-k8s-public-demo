@@ -180,6 +180,7 @@ resource "aws_lb_target_group" "green" { // Target Group Green
  stickiness {
    enabled = true
    type    = "lb_cookie"
+   cookie_duration = "86400"
   }
  health_check {
    #path = "/StatusPing"
