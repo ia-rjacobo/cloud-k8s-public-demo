@@ -18,7 +18,6 @@ resource "aws_lb_listener" "albfe_listener" {
  load_balancer_arn = aws_lb.albfe.arn
  port              = "443"
  protocol          = "HTTPS"
- #ssl_policy        = "ELBSecurityPolicy-2016-08"
  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
  certificate_arn   = aws_acm_certificate.albfecertificate.arn
 
@@ -37,7 +36,7 @@ resource "aws_lb_listener" "albfe_listener" {
 
         stickiness {
           enabled  = false
-          duration = 86400 #43200 is 12 hours
+          duration = 86400
         }
       }
     }
