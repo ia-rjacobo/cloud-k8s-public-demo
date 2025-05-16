@@ -197,7 +197,6 @@ resource "aws_lb_target_group" "blue" { // Target Group Blue
    interval = 5
    matcher = "200,301,302"  # has to be HTTP 200 or fails
  }
-
 }
 
 resource "aws_lb_target_group_attachment" "tg_attachment_blue" {
