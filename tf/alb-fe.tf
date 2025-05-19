@@ -35,8 +35,8 @@ resource "aws_lb_listener" "albfe_listener" {
         }
 
         stickiness {
-          enabled  = false
-          duration = 86400
+          enabled  = true
+          duration = 24 * 60 * 60
         }
       }
     }
