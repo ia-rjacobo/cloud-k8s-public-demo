@@ -112,6 +112,9 @@ resource "aws_instance" "linux-management" {
       volume_type           = "gp3"
       volume_size           = "${var.ec2_vol_size}"
     }
+    metadata_options {
+        http_tokens = "required"
+    }
     user_data = file("userdata/userdata-linux-mgmt.txt")
 
   tags = {
@@ -141,6 +144,9 @@ resource "aws_instance" "windows-management" {
       encrypted             = true
       volume_type           = "gp3"
       volume_size           = "${var.ec2_vol_size}"
+    }
+    metadata_options {
+        http_tokens = "required"
     }
     user_data = file("userdata/userdata-windows-mgmt.txt")
 
