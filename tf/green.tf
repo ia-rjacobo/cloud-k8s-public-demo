@@ -27,6 +27,8 @@ echo "token: my-shared-secret" > /etc/rancher/rke2/config.yaml
 echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
+echo "cluster-domain:" >> /etc/rancher/rke2/config.yaml
+echo "  - dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service
@@ -90,6 +92,8 @@ echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
 echo "server: https://${aws_instance.green[0].private_ip}:9345" >> /etc/rancher/rke2/config.yaml
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
+echo "cluster-domain:" >> /etc/rancher/rke2/config.yaml
+echo "  - dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service
@@ -147,7 +151,7 @@ sudo apt update && sudo apt install wget vim curl -y
 sudo hostnamectl set-hostname g-agent0${count.index+1}
 
 mkdir -p /etc/rancher/rke2/
-echo "server: https://${aws_instance.green[0].private_ip}:9345" > /etc/rancher/rke2/config.yaml
+echo "server: https://${aws_instance.blue[0].private_ip}:9345" > /etc/rancher/rke2/config.yaml
 echo "token: my-shared-secret" >> /etc/rancher/rke2/config.yaml
 
 curl -sfL https://get.rke2.io | INSTALL_RKE2_TYPE="agent" sh -
