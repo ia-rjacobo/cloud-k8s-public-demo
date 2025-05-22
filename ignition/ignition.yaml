@@ -82,7 +82,7 @@ spec:
   selector:
     app: ignition
     type: be
-  type: NodePort
+  type: LoadBalancer
   ports:
     - name: 8088-tcp
       protocol: TCP
@@ -107,7 +107,7 @@ spec:
   selector:
     app: ignition
     type: fe
-  type: NodePort
+  type: LoadBalancer
   ports:
     - name: 8088-tcp
       protocol: TCP
