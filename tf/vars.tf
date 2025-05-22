@@ -112,7 +112,7 @@ variable "traffic_distribution" {
 variable "enable_blue_env" {
   description = "Enable blue environment"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "blue_instance_count" {
