@@ -27,8 +27,7 @@ echo "token: my-shared-secret" > /etc/rancher/rke2/config.yaml
 echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
-echo "cluster-domain:" >> /etc/rancher/rke2/config.yaml
-echo "  - dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
+echo "cluster-domain: dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service
@@ -94,8 +93,7 @@ echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
 echo "server: https://${aws_instance.blue[0].private_ip}:9345" >> /etc/rancher/rke2/config.yaml
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
-echo "cluster-domain:" >> /etc/rancher/rke2/config.yaml
-echo "  - dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
+echo "cluster-domain: dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl start rke2-server.service
