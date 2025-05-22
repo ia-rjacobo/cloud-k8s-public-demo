@@ -80,10 +80,9 @@ metadata:
   name: ignition-be-service
 spec:
   selector:
-
     app: ignition
     type: be
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: 8088-tcp
       protocol: TCP
@@ -108,7 +107,7 @@ spec:
   selector:
     app: ignition
     type: fe
-  type: LoadBalancer
+  type: NodePort
   ports:
     - name: 8088-tcp
       protocol: TCP
