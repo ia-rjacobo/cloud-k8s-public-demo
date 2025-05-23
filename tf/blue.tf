@@ -17,7 +17,34 @@ resource "aws_instance" "blue" {
       volume_type           = "gp3"
       volume_size           = "${var.ec2_vol_size}"
     }
-    user_data = "${file("userdata/userdata-b-server01.txt")}"
+    user_data = <<-OUTEREOF
+#!/bin/bash
+sudo apt update && sudo apt install wget vim curl -y
+sudo hostnamectl set-hostname b-server0${count.index+1}
+
+mkdir -p /etc/rancher/rke2/
+echo "token: my-shared-secret" > /etc/rancher/rke2/config.yaml
+echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
+echo "tls-san:" >> /etc/rancher/rke2/config.yaml
+echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
+echo "cluster-domain: dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
+curl -sfL https://get.rke2.io | sh -
+systemctl enable rke2-server.service
+systemctl start rke2-server.service
+
+# Install kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# Copy Config
+mkdir -p /root/.kube
+cp /etc/rancher/rke2/rke2.yaml /root/.kube/config
+
+sudo snap install aws-cli --classic
+sudo snap install powershell --classic
+
+
+OUTEREOF
 
   tags = {
     Name = "b-server0${count.index+1}"
