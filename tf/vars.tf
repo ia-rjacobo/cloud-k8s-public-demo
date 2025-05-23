@@ -77,7 +77,7 @@ variable "ec2_vol_size" {
 variable "enable_mgmt" {
   description = "Enable mgmt server"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "mgmt_instance_count" {
@@ -112,7 +112,7 @@ variable "traffic_distribution" {
 variable "enable_blue_env" {
   description = "Enable blue environment"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "blue_instance_count" {
