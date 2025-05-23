@@ -115,7 +115,7 @@ resource "aws_instance" "linux-management" {
     metadata_options {
         http_tokens = "required"
     }
-    user_data = file("userdata/userdata-linux-mgmt.txt")
+    user_data = "${file("userdata/userdata-linux-mgmt.txt")}"
 
   tags = {
     Name = "linux-management"
@@ -148,7 +148,7 @@ resource "aws_instance" "windows-management" {
     metadata_options {
         http_tokens = "required"
     }
-    user_data = file("userdata/userdata-windows-mgmt.txt")
+    user_data = "${file("userdata/userdata-windows-mgmt.txt")}"
 
   tags = {
     Name = "windows-management"

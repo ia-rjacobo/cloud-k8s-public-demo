@@ -77,7 +77,7 @@ variable "ec2_vol_size" {
 variable "enable_mgmt" {
   description = "Enable mgmt server"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "mgmt_instance_count" {
