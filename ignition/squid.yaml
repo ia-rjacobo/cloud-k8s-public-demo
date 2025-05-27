@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: squid-deployment
+  labels:
+    app: ignition
+    type: fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ignition
+  template:
+    metadata:
+      labels:
+        app: squid
+        type: proxy
+    spec:
+      containers:
+      - name: squid
+        image: ubuntu/squid:4.10-20.04_beta
+        ports:
+        - name: proxy
+          containerPort: 3128
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: squid-service
+spec:
+  selector:
+    app: squid
+    type: proxy
+  type: LoadBalancer
+  ports:
+    - name: 3128-tcp
+      protocol: TCP
+      port: 9443
+      targetPort: 3128
