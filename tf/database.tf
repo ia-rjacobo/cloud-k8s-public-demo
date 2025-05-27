@@ -2,7 +2,7 @@
 # Create Database
 ######################################
 data "aws_secretsmanager_secret_version" "my_secret" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   secret_id = "arn:aws:secretsmanager:us-west-2:590183919098:secret:public-demo-frontend-ekMPCY"  # Replace with your secret ARN
   version_stage = "AWSCURRENT" # Or specify a specific version_id
 }
@@ -10,7 +10,7 @@ data "aws_secretsmanager_secret_version" "my_secret" {
 
 
 resource "aws_security_group" "allow_aurora" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   name        = "Aurora_sg"
   description = "Security group for RDS Aurora"
   vpc_id = aws_vpc.vpc.id
@@ -33,7 +33,7 @@ resource "aws_security_group" "allow_aurora" {
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   name       = "ignition-subnet-group"
   subnet_ids = [
     aws_subnet.private_subnet[0].id,
@@ -47,7 +47,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 }
 
 resource "aws_rds_cluster" "aurorards" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   cluster_identifier     = "auroracluster"
   engine                 = "aurora-mysql"
   engine_version         = "5.7.mysql_aurora.2.12.0"
@@ -61,7 +61,7 @@ resource "aws_rds_cluster" "aurorards" {
 }
 
 resource "aws_rds_cluster_instance" "cluster_instances" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   identifier          = "aurorainstance"
   cluster_identifier  = aws_rds_cluster.aurorards.id
   instance_class      = "db.t3.medium"
@@ -75,7 +75,7 @@ resource "aws_rds_cluster_instance" "cluster_instances" {
 ######################################
 
 resource "aws_route53_record" "db" {
-  count = var.deploy_db ? 1 : 0
+  count = var.enable_db ? 1 : 0
   zone_id = var.vpc_zone_id
   name    = var.route53_db
   type    = "CNAME"
