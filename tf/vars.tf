@@ -93,7 +93,11 @@ variable "db_username" {
     default = "ignition"
 }
 
-
+variable "enable_db" {
+  description = "Enable blue environment"
+  type        = bool
+  default     = false
+}
 ######################################
 ## Routing Traffic Distribution
 ######################################
