@@ -96,7 +96,7 @@ variable "db_username" {
 variable "enable_db" {
   description = "Enable blue environment"
   type        = bool
-  default     = false
+  default     = true
 }
 ######################################
 ## Routing Traffic Distribution
