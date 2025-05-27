@@ -4,16 +4,16 @@ metadata:
   name: squid-deployment
   labels:
     app: proxy
-    type: fe
+    type: proxy
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: ignition
+      app: proxy
   template:
     metadata:
       labels:
-        app: squid
+        app: proxy
         type: proxy
     spec:
       containers:
@@ -33,7 +33,7 @@ metadata:
 spec:
   selector:
     app: proxy
-    type: fe
+    type: proxy
   type: LoadBalancer
   ports:
     - name: 3128-tcp
