@@ -142,7 +142,7 @@ variable "blue_agent_instance_count" {
 variable "enable_green_env" {
   description = "Enable green environment"
   type        = bool
-  default     = false
+  default     = true
 }
 
 variable "green_instance_count" {
