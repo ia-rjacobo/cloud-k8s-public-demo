@@ -67,7 +67,7 @@ twingateOperator:
 INNER3EOF
 helm upgrade twop oci://ghcr.io/twingate/helmcharts/twingate-operator --install --wait -f /root/tg/values.yaml
 
-cat << INNER4EOF > /root/tg/values.yaml
+cat << INNER4EOF > /root/tg/twingate.yaml
 apiVersion: twingate.com/v1beta
 kind: TwingateConnector
 metadata:
@@ -265,7 +265,7 @@ INNER9EOF
 fi
 
 kubectl apply -f /root/deploy/doppler.yaml
-kubectl apply -f /root/deploy/twingate.yaml
+kubectl apply -f /root/tg/twingate.yaml
 
 sleep 60
 chmod +x /root/scripts/argo.sh
