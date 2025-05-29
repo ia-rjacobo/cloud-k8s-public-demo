@@ -35,7 +35,7 @@ kubectl apply -f https://github.com/DopplerHQ/kubernetes-operator/releases/lates
 kubectl create secret generic doppler-token-secret-fe --namespace doppler-operator-system --from-literal=serviceToken=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_fe)
 kubectl create secret generic doppler-token-secret-be --namespace doppler-operator-system --from-literal=serviceToken=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_be)
 kubectl create secret generic doppler-token-secret-tg --namespace doppler-operator-system --from-literal=serviceToken=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg)
-
+kubectl create secret generic doppler-token-secret-tg --namespace doppler-operator-system --from-literal=serviceToken=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg_k8s_operator_api_key)
 
 # Create and maintain repo secret via iam role ecr permission
 cat << INNER1EOF > /root/scripts/secretsCron.sh 
@@ -58,32 +58,32 @@ crontab<<INNER2EOF
 INNER2EOF
 
 
-cat << INNER3EOF > /root/deploy/twingate.yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: twingate-deployment
-  labels:
-    app: twingate
-    type: proxy
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: twingate
-  template:
-    metadata:
-      labels:
-        app: twingate
-        type: proxy
-    spec:
-      containers:
-      - name: twingate01
-        image: twingate/connector:1.75.0
-        envFrom:
-          - secretRef:
-              name: doppler-token-secret-tg # Kubernetes secret name
-INNER3EOF
+#cat << INNER3EOF > /root/deploy/twingate.yaml
+#apiVersion: apps/v1
+#kind: Deployment
+#metadata:
+#  name: twingate-deployment
+#  labels:
+#    app: twingate
+#    type: proxy
+#spec:
+#  replicas: 1
+#  selector:
+#    matchLabels:
+#      app: twingate
+#  template:
+#    metadata:
+#      labels:
+#        app: twingate
+#        type: proxy
+#    spec:
+#      containers:
+#      - name: twingate01
+#        image: twingate/connector:1.75.0
+#        envFrom:
+#          - secretRef:
+#              name: doppler-token-secret-tg # Kubernetes secret name
+#INNER3EOF
 
 
 cat << INNER4EOF > /root/deploy/doppler.yaml
@@ -139,6 +139,25 @@ spec:
   resyncSeconds: 120
   managedSecret:
     name: doppler-token-secret-tg
+    namespace: default
+    type: Opaque
+
+---
+
+apiVersion: secrets.doppler.com/v1alpha1
+kind: DopplerSecret
+metadata:
+  name: doppler-token-secret-tg
+  namespace: doppler-operator-system
+spec:
+  tokenSecret:
+    name: doppler_token_secret_tg_k8s_operator_api_key
+    namespace: doppler-operator-system
+  project: public-demo-twingate
+  config: dev
+  resyncSeconds: 120
+  managedSecret:
+    name: doppler_token_secret_tg_k8s_operator_api_key
     namespace: default
     type: Opaque
 INNER4EOF
