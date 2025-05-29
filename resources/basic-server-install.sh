@@ -3,6 +3,7 @@ SECRETS_REGION=us-west-2
 
 mkdir -p /root/scripts
 mkdir -p /root/deploy
+mkdir -p /root/tg
 
 # Install Helm
 curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
@@ -58,35 +59,52 @@ crontab<<INNER2EOF
 INNER2EOF
 
 
-#cat << INNER3EOF > /root/deploy/twingate.yaml
-#apiVersion: apps/v1
-#kind: Deployment
-#metadata:
-#  name: twingate-deployment
-#  labels:
-#    app: twingate
-#    type: proxy
-#spec:
-#  replicas: 1
-#  selector:
-#    matchLabels:
-#      app: twingate
-#  template:
-#    metadata:
-#      labels:
-#        app: twingate
-#        type: proxy
-#    spec:
-#      containers:
-#      - name: twingate01
-#        image: twingate/connector:1.75.0
-#        envFrom:
-#          - secretRef:
-#              name: doppler-token-secret-tg # Kubernetes secret name
-#INNER3EOF
+cat << INNER3EOF > /root/tg/values.yaml
+twingateOperator:
+  apiKey: "$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg_k8s_operator_api_key)"
+  network: "$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg_k8s_operator_network)"
+  remoteNetworkId: "$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg_k8s_operator_network_id)"
+INNER3EOF
+helm upgrade twop oci://ghcr.io/twingate/helmcharts/twingate-operator --install --wait -f /root/tg/values.yaml
+
+cat << INNER4EOF > /root/tg/values.yaml
+apiVersion: twingate.com/v1beta
+kind: TwingateConnector
+metadata:
+  name: my-connector
+spec:
+  imagePolicy:
+    provider: dockerhub
+    schedule: "0 0 * * *"
+
+---
+
+apiVersion: twingate.com/v1beta
+kind: TwingateResource
+metadata:
+  name: devdemo
+spec:
+  name: devdemo
+  address: 10.81.0.0/16
+    #alias: devdemo.local
+
+---
+
+apiVersion: twingate.com/v1beta
+kind: TwingateResourceAccess
+metadata:
+  name: devdemo-cloud-access
+spec:
+  resourceRef:
+    name: devdemo
+    namespace: default
+  principalExternalRef:
+    type: group
+    name: Cloud Team
+INNER4EOF
 
 
-cat << INNER4EOF > /root/deploy/doppler.yaml
+cat << INNER5EOF > /root/deploy/doppler.yaml
 apiVersion: secrets.doppler.com/v1alpha1
 kind: DopplerSecret
 metadata:
@@ -160,10 +178,10 @@ spec:
     name: doppler_token_secret_tg_k8s_operator_api_key
     namespace: default
     type: Opaque
-INNER4EOF
+INNER5EOF
 
 if [ $(hostname) == b-server01 ]; then 
-cat << INNER5EOF > /root/deploy/argo.yaml
+cat << INNER6EOF > /root/deploy/argo.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -195,17 +213,17 @@ spec:
     app.kubernetes.io/name: argocd-server
   sessionAffinity: None
   type: LoadBalancer
-INNER5EOF
-cat << INNER6EOF > /root/scripts/argo.sh
+INNER6EOF
+cat << INNER7EOF > /root/scripts/argo.sh
 kubectl apply -f /root/deploy/argo.yaml
 sleep 10
 argocd login 127.0.0.1:8443 --insecure --username admin --password $(argocd admin initial-password -n argocd | sed 's/ .*//')
 argocd account update-password --insecure --account admin --current-password $(argocd admin initial-password -n argocd | sed 's/ .*//') --new-password $(aws secretsmanager get-secret-value --secret-id argocd --region us-west-2 | jq --raw-output '.SecretString' | jq -r .password)
-INNER6EOF
+INNER7EOF
 fi
 
 if [ $(hostname) == g-server01 ]; then 
-cat << INNER5EOF > /root/deploy/argo.yaml
+cat << INNER8EOF > /root/deploy/argo.yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -237,13 +255,13 @@ spec:
     app.kubernetes.io/name: argocd-server
   sessionAffinity: None
   type: LoadBalancer
-INNER5EOF
-cat << INNER6EOF > /root/scripts/argo.sh
+INNER8EOF
+cat << INNER9EOF > /root/scripts/argo.sh
 kubectl apply -f /root/deploy/argo.yaml
 sleep 10
 argocd login 127.0.0.1:8444 --insecure --username admin --password $(argocd admin initial-password -n argocd | sed 's/ .*//')
 argocd account update-password --insecure --account admin --current-password $(argocd admin initial-password -n argocd | sed 's/ .*//') --new-password $(aws secretsmanager get-secret-value --secret-id argocd --region us-west-2 | jq --raw-output '.SecretString' | jq -r .password)
-INNER6EOF
+INNER9EOF
 fi
 
 kubectl apply -f /root/deploy/doppler.yaml
