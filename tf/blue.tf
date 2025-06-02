@@ -28,8 +28,8 @@ echo "enable-servicelb: true" >> /etc/rancher/rke2/config.yaml
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
 echo "cluster-domain: dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
-echo "cluster-cidr: 10.81.0.0/16" >> /etc/rancher/rke2/config.yaml
-echo "service-cird: 10.82.0.0/16" >> /etc/rancher/rke2/config.yaml
+echo "cluster-cidr: 10.81.1.0/24" >> /etc/rancher/rke2/config.yaml
+echo "service-cird: 10.82.2.0/24" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl stop rke2-server.service
@@ -98,8 +98,8 @@ echo "server: https://${aws_instance.blue[0].private_ip}:9345" >> /etc/rancher/r
 echo "tls-san:" >> /etc/rancher/rke2/config.yaml
 echo "  - demo.inductiveautomation.com" >> /etc/rancher/rke2/config.yaml
 echo "cluster-domain: dev.demo.cluster.local" >> /etc/rancher/rke2/config.yaml
-echo "cluster-cidr: 10.81.0.0/16" >> /etc/rancher/rke2/config.yaml
-echo "service-cird: 10.82.0.0/16" >> /etc/rancher/rke2/config.yaml
+echo "cluster-cidr: 10.81.1.0/24" >> /etc/rancher/rke2/config.yaml
+echo "service-cird: 10.81.2.0/24" >> /etc/rancher/rke2/config.yaml
 curl -sfL https://get.rke2.io | sh -
 systemctl enable rke2-server.service
 systemctl stop rke2-server.service
