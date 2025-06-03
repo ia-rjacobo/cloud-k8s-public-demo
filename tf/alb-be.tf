@@ -52,15 +52,15 @@ resource "aws_lb_listener" "albbe_listener-8444" {
 }
 
 // Listener
-resource "aws_lb_listener" "albbe_listener-9999" {
+resource "aws_lb_listener" "albbe_listener-9443" {
  load_balancer_arn = aws_lb.albbe.arn
- port              = "9999"
+ port              = "9443"
  protocol          = "HTTPS"
  ssl_policy        = "ELBSecurityPolicy-TLS13-1-2-Res-2021-06"
  certificate_arn   = aws_acm_certificate.albfecertificate.arn
  default_action {
    type             = "forward"
-   target_group_arn = aws_lb_target_group.blue-be-9999.arn
+   target_group_arn = aws_lb_target_group.blue-be-9443.arn
     }
 }
 
@@ -175,9 +175,9 @@ resource "aws_lb_target_group" "blue-be-443" { // Target Group blue-be
  }
 }
 
-resource "aws_lb_target_group" "blue-be-9999" { // Target Group blue-be
- name     = "target-group-blue-be-9999"
- port     = 9999
+resource "aws_lb_target_group" "blue-be-9443" { // Target Group blue-be
+ name     = "target-group-blue-be-9443"
+ port     = 9443
  protocol = "HTTP"
  vpc_id   = aws_vpc.vpc.id
  load_balancing_algorithm_type = "round_robin"
@@ -188,7 +188,7 @@ resource "aws_lb_target_group" "blue-be-9999" { // Target Group blue-be
   }
  health_check {
    path = "/"
-   port = 9999
+   port = 9443
    healthy_threshold = 2
    unhealthy_threshold = 2
    timeout = 2
@@ -242,23 +242,23 @@ count = var.enable_blue_env ? var.blues_instance_count : 0
  port             = 8088
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_blue-be-9999" {
+resource "aws_lb_target_group_attachment" "tg_attachment_blue-be-9443" {
 count            = length(aws_instance.blue)
- target_group_arn = aws_lb_target_group.blue-be-9999.arn
+ target_group_arn = aws_lb_target_group.blue-be-9443.arn
  target_id        = aws_instance.blue[count.index].id
- port             = 9999
+ port             = 9443
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_blues-be-9999" {
+resource "aws_lb_target_group_attachment" "tg_attachment_blues-be-9443" {
 count            = length(aws_instance.blue)
- target_group_arn = aws_lb_target_group.blue-be-9999.arn
+ target_group_arn = aws_lb_target_group.blue-be-9443.arn
  target_id        = aws_instance.blues[count.index].id
- port             = 9999
+ port             = 9443
 }
 
-resource "aws_lb_target_group_attachment" "tg_attachment_blue-agent-be-9999" {
+resource "aws_lb_target_group_attachment" "tg_attachment_blue-agent-be-9443" {
 count            = length(aws_instance.blue)
- target_group_arn = aws_lb_target_group.blue-be-9999.arn
+ target_group_arn = aws_lb_target_group.blue-be-9443.arn
  target_id        = aws_instance.blue-agent[count.index].id
- port             = 9999
+ port             = 9443
 }

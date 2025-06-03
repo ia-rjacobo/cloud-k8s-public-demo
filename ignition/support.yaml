@@ -36,7 +36,7 @@ spec:
     type: support
   type: LoadBalancer
   ports:
-    - name: 3128-tcp
+    - name: 9443-tcp
       protocol: TCP
       port: 9443
       targetPort: 80
