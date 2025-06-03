@@ -1,27 +1,27 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: squid-deployment
+  name: support-deployment
   labels:
-    app: proxy
-    type: proxy
+    app: support
+    type: support
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: proxy
+      app: support
   template:
     metadata:
       labels:
-        app: proxy
-        type: proxy
+        app: support
+        type: support
     spec:
       containers:
-      - name: squid
-        image: ubuntu/squid:4.10-20.04_beta
+      - name: support
+        image: nginx
         ports:
-        - name: proxy
-          containerPort: 3128
+        - name: support
+          containerPort: 80
 
 
 ---
@@ -29,14 +29,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: squid-service
+  name: support-service
 spec:
   selector:
-    app: proxy
-    type: proxy
+    app: support
+    type: support
   type: LoadBalancer
   ports:
     - name: 3128-tcp
       protocol: TCP
       port: 9443
-      targetPort: 3128
+      targetPort: 80
