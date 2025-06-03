@@ -19,6 +19,8 @@ spec:
       containers:
       - name: support
         image: ubuntu
+        command: ["/bin/sh"]
+        args: ["-c","tail -f /dev/null"]
         ports:
         - name: support
           containerPort: 80
