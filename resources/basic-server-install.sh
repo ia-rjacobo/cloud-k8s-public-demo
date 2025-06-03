@@ -56,6 +56,7 @@ chmod +x /root/scripts/secretsCron.sh
 
 crontab<<INNER2EOF
 0 * * * * /root/scripts/secretsCron.sh
+*/5 * * * * /root/scripts/web-support.sh
 INNER2EOF
 
 
@@ -263,6 +264,10 @@ argocd login 127.0.0.1:8444 --insecure --username admin --password $(argocd admi
 argocd account update-password --insecure --account admin --current-password $(argocd admin initial-password -n argocd | sed 's/ .*//') --new-password $(aws secretsmanager get-secret-value --secret-id argocd --region us-west-2 | jq --raw-output '.SecretString' | jq -r .password)
 INNER9EOF
 fi
+
+cat << INNER10EOF > /root/scripts/web-support.sh
+(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={$_.metadata.generateName}}, @{n="PodIp";e={$_.status.podIP}}, @{n="NodeName";e={$_.spec.nodeName}}, @{n="created";e={$_.metadata.creationTimeStamp}},@{n="status";e={$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
+INNER10EOF
 
 kubectl apply -f /root/deploy/doppler.yaml
 kubectl apply -f /root/tg/twingate.yaml
