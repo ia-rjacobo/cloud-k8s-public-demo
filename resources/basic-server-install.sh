@@ -59,9 +59,6 @@ crontab<<INNER2EOF
 */5 * * * * /root/scripts/web-support.sh
 INNER2EOF
 
-chmod +x /root/scripts/web-support.sh
-/root/scripts/web-support.sh
-
 cat << INNER3EOF > /root/tg/values.yaml
 twingateOperator:
   apiKey: "$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .doppler_token_secret_tg_k8s_operator_api_key)"
@@ -270,6 +267,10 @@ fi
 cat << INNER10EOF > /root/scripts/web-support.sh
 (kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={$_.metadata.generateName}}, @{n="PodIp";e={$_.status.podIP}}, @{n="NodeName";e={$_.spec.nodeName}}, @{n="created";e={$_.metadata.creationTimeStamp}},@{n="status";e={$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
 INNER10EOF
+
+
+chmod +x /root/scripts/web-support.sh
+/root/scripts/web-support.sh
 
 kubectl apply -f /root/deploy/doppler.yaml
 kubectl apply -f /root/tg/twingate.yaml
