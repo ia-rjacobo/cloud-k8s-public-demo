@@ -1,5 +1,7 @@
 ECR_REPO=590183919098.dkr.ecr.us-west-2.amazonaws.com
 SECRETS_REGION=us-west-2
+S3_WEB_BUCKET=demo-support-web-dev-bb041aafc60a
+
 
 mkdir -p /root/scripts
 mkdir -p /root/deploy
@@ -266,6 +268,7 @@ fi
 
 cat << INNER10EOF > /root/scripts/web-support.ps1
 (kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={$_.metadata.generateName}}, @{n="PodIp";e={$_.status.podIP}}, @{n="NodeName";e={$_.spec.nodeName}}, @{n="created";e={$_.metadata.creationTimeStamp}},@{n="status";e={$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
+aws s3 cp /tmp/index.html s3://$S3_WEB_BUCKET
 INNER10EOF
 
 

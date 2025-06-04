@@ -59,6 +59,14 @@ variable "ecr_repo" {
 }
 
 ######################################
+## S3 Variables
+######################################
+variable "s3_web_bucket" {
+    default = "demo-support-web-dev-bb041aafc60a"
+}
+
+
+######################################
 ## Instance Variables
 ######################################
 variable "linux_ami" {
@@ -116,7 +124,7 @@ variable "traffic_distribution" {
 variable "enable_blue_env" {
   description = "Enable blue environment"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "blue_instance_count" {
