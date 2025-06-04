@@ -59,6 +59,8 @@ crontab<<INNER2EOF
 */5 * * * * /root/scripts/web-support.sh
 INNER2EOF
 
+chmod +x /root/scripts/web-support.sh
+/root/scripts/web-support.sh
 
 cat << INNER3EOF > /root/tg/values.yaml
 twingateOperator:
