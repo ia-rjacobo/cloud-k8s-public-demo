@@ -56,7 +56,7 @@ chmod +x /root/scripts/secretsCron.sh
 
 crontab<<INNER2EOF
 0 * * * * /root/scripts/secretsCron.sh
-*/5 * * * * /root/scripts/web-support.sh
+*/5 * * * * /snap/bin/pwsh /root/scripts/web-support.ps1
 INNER2EOF
 
 cat << INNER3EOF > /root/tg/values.yaml
@@ -264,13 +264,13 @@ argocd account update-password --insecure --account admin --current-password $(a
 INNER9EOF
 fi
 
-cat << INNER10EOF > /root/scripts/web-support.sh
+cat << INNER10EOF > /root/scripts/web-support.ps1
 (kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={$_.metadata.generateName}}, @{n="PodIp";e={$_.status.podIP}}, @{n="NodeName";e={$_.spec.nodeName}}, @{n="created";e={$_.metadata.creationTimeStamp}},@{n="status";e={$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
 INNER10EOF
 
 
 chmod +x /root/scripts/web-support.sh
-/root/scripts/web-support.sh
+/snap/bin/pwsh /root/scripts/web-support.ps1
 
 kubectl apply -f /root/deploy/doppler.yaml
 kubectl apply -f /root/tg/twingate.yaml
