@@ -37,6 +37,10 @@ resource "aws_iam_instance_profile" "iam_ssm_profile" {
   role = "${aws_iam_role.instance_role.name}"
 }
 
+resource "aws_iam_role_policy_attachment" "s3_full_attach" {
+  role       = aws_iam_role.instance_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+}
 
 ######################################
 ## Create Instance(s) SG
