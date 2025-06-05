@@ -261,7 +261,7 @@ INNER8EOF
 cat << INNER9EOF > /root/scripts/argo.sh
 kubectl apply -f /root/deploy/argo.yaml
 sleep 10
-argocd login 127.0.0.1:8444 --insecure --username admin --password $(argocd admin initial-password -n argocd | sed 's/ .*//')
+argocd login 127.0.0.1:8444 --insecure --username admin --password \$(argocd admin initial-password -n argocd | sed 's/ .*//')
 argocd account update-password --insecure --account admin --current-password $(argocd admin initial-password -n argocd | sed 's/ .*//') --new-password $(aws secretsmanager get-secret-value --secret-id argocd --region us-west-2 | jq --raw-output '.SecretString' | jq -r .password)
 INNER9EOF
 fi
