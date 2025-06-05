@@ -267,7 +267,7 @@ INNER9EOF
 fi
 
 cat << INNER10EOF > /root/scripts/web-support.ps1
-(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={'$_.metadata.generateName'}}, @{n="PodIp";e={\$_.status.podIP}}, @{n="NodeName";e={\$_.spec.nodeName}}, @{n="created";e={\$_.metadata.creationTimeStamp}},@{n="status";e={\$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
+(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Name";e={\$_.metadata.generateName}}, @{n="PodIp";e={\$_.status.podIP}}, @{n="NodeName";e={\$_.spec.nodeName}}, @{n="created";e={\$_.metadata.creationTimeStamp}},@{n="status";e={\$_.status.phase}} | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
 aws s3 cp /tmp/index.html s3://$S3_WEB_BUCKET
 INNER10EOF
 
