@@ -20,7 +20,7 @@ spec:
       - name: support
         image: httpd:bookworm
         command: ["/bin/sh"]
-        args: ["-c","apt update && apt install zip curl -y && curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && unzip awscliv2.zip && ./aws/install && echo 'while true; do aws s3 cp s3://demo-support-web-dev-bb041aafc60a/index.html /usr/local/apache2/htdocs/index.html && chmod 777 /usr/local/apache2/index.html && sleep 60;done' > /tmp/web.sh && /bin/sh /tmp/web.sh& && httpd-foreground"]
+        args: ["-c","apt update && apt install zip curl -y && curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o awscliv2.zip && unzip awscliv2.zip && ./aws/install && echo 'while true; do aws s3 cp s3://demo-support-web-dev-bb041aafc60a/index.html /usr/local/apache2/htdocs/index.html && chmod 777 /usr/local/apache2/index.html && sleep 60;done' > /tmp/web.sh && /bin/sh /tmp/web.sh & && httpd-foreground"]
         ports:
         - name: support
           containerPort: 80
