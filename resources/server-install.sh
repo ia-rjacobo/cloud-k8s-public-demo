@@ -73,7 +73,7 @@ cat << INNER4EOF > /root/tg/twingate.yaml
 apiVersion: twingate.com/v1beta
 kind: TwingateConnector
 metadata:
-  name: my-connector
+  name: tg-connector
 spec:
   imagePolicy:
     provider: dockerhub
