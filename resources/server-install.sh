@@ -267,7 +267,14 @@ INNER9EOF
 fi
 
 cat << INNER10EOF > /root/scripts/web-support.ps1
-(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="created";e={\$_.metadata.creationTimeStamp}}, @{n="status";e={\$_.status.phase}}, @{n="NodeName";e={\$_.spec.nodeName}}, @{n="PodIp";e={\$_.status.podIP}},@{n="Name";e={\$_.metadata.generateName}}  | Sort-Object Name | ConvertTo-Html | Out-File /tmp/index.html
+\$Header = @"
+<style>
+TABLE {border-width: 1px; border-style: solid; border-color: black; border-collapse: collapse;}
+TH {border-width: 1px; padding: 3px; border-style: solid; border-color: black; background-color: #6495ED;}
+TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
+</style>
+"@
+(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Created";e={\$_.metadata.creationTimeStamp}}, @{n="Status";e={\$_.status.phase}}, @{n="Node";e={\$_.spec.nodeName}}, @{n="Pod Ip";e={\$_.status.podIP}},@{n="Pod Name";e={\$_.metadata.Name}}, @{n="Date";e={Get-Date -f 'yyyy/MM/dd hh:mm:ss' -AsUTC}}  | Sort-Object Name | ConvertTo-Html -Head \$Header -Title "Container List" | Out-File /tmp/index.html
 aws s3 cp /tmp/index.html s3://$S3_WEB_BUCKET
 INNER10EOF
 
