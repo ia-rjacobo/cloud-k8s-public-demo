@@ -274,7 +274,7 @@ TH {border-width: 1px; padding: 3px; border-style: solid; border-color: black; b
 TD {border-width: 1px; padding: 3px; border-style: solid; border-color: black;}
 </style>
 "@
-(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Created";e={\$_.metadata.creationTimeStamp}}, @{n="Status";e={\$_.status.phase}}, @{n="Node";e={\$_.spec.nodeName}}, @{n="Pod Name";e={\$_.metadata.Name}}, @{n="Pod Ip";e={\$_.status.podIP}}, @{n="Date";e={Get-Date -f 'yyyy/MM/dd hh:mm:ss' -AsUTC}}  | Where "Pod Name" -like "*-deployment-*" | Sort-Object Name | ConvertTo-Html -Head \$Header -Title "Pod Info" | Out-File /tmp/index.html
+(kubectl get pods -o wide -o json | ConvertFrom-Json).items | Select @{n="Created";e={\$_.metadata.creationTimeStamp}}, @{n="Status";e={\$_.status.phase}}, @{n="Node";e={\$_.spec.nodeName}}, @{n="Pod Name";e={\$_.metadata.Name}}, @{n="Pod Ip";e={\$_.status.podIP}}, @{n="Date";e={Get-Date -f 'yyyy/MM/dd hh:mm:ss' -AsUTC}}  | Where "Pod Name" -like "ignition-*" | Sort-Object Name | ConvertTo-Html -Head \$Header -Title "Pod Info" | Out-File /tmp/index.html
 aws s3 cp /tmp/index.html s3://$S3_WEB_BUCKET
 INNER10EOF
 
