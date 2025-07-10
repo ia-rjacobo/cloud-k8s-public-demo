@@ -288,3 +288,9 @@ kubectl apply -f /root/tg/twingate.yaml
 sleep 60
 chmod +x /root/scripts/argo.sh
 /root/scripts/argo.sh
+
+
+# Install Wiz Sensor
+helm repo add wiz-sec https://charts.wiz.io/
+helm repo update
+helm upgrade --install wiz-sensor wiz-sec/wiz-sensor --create-namespace --namespace=wiz --set image.registry=registry.wiz.io --set imagePullSecret.username=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .wiz_imagePullSecretUsername) --set imagePullSecret.password=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .wiz_imagePullSecretPassword) --set wizApiToken.clientId=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .wiz_ApiTokenClientId) --set wizApiToken.clientToken=$(aws secretsmanager get-secret-value --secret-id doppler-poc --region us-west-2 | jq --raw-output '.SecretString' | jq -r .wiz_ApiTokenClientToken)
